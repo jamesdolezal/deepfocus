@@ -6,7 +6,7 @@ from tqdm import tqdm
 from rich import print as print
 
 
-def check_focus_legacy(slide, buffer, kernel, mag):
+def check_focus_legacy(slide, buffer, kernel, qc, mag):
     """Check for in-focus areas using the legacy TFLearn model."""
 
     import tflearn
@@ -14,7 +14,7 @@ def check_focus_legacy(slide, buffer, kernel, mag):
 
     full_size = kernel * buffer
     wsi = sf.WSI(slide, tile_px=(kernel * buffer), tile_um=mag)
-    wsi.qc('otsu')
+    wsi.qc(qc)
 
     # Initialize & load model
     tflearn.init_graph()
@@ -59,8 +59,9 @@ def check_focus_legacy(slide, buffer, kernel, mag):
 @click.option('--buffer', help='Path to slide', metavar=int, default=8)
 @click.option('--kernel', help='Kernel size for prediction.', metavar=int, default=64)
 @click.option('--mag', help='Magnification level. Defaults to 40x.', metavar=str, default='40x')
+@click.option('--qc', help="Base QC method to use.", metavar=str, default='otsu')
 @click.option('--legacy', help="Use legacy TFLearn API.", metavar=bool, is_flag=True, default=False)
-def check_focus(slide, buffer, kernel, mag, legacy):
+def check_focus(slide, buffer, kernel, mag, qc, legacy):
     """Check for in-focus areas."""
 
     if legacy:
@@ -70,7 +71,7 @@ def check_focus(slide, buffer, kernel, mag, legacy):
 
     full_size = kernel * buffer
     wsi = sf.WSI(slide, tile_px=(kernel * buffer), tile_um=mag)
-    wsi.qc('otsu')
+    wsi.qc(qc)
 
     # Initialize & load model
     model = deepfocus_v3()

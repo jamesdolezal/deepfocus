@@ -61,7 +61,8 @@ def load_checkpoint(model, ckpt, verbose=False):
     reader = tf.compat.v1.train.load_checkpoint(ckpt)
     ckpt_vars = tf.compat.v1.train.list_variables(ckpt)
     ckpt_layers = list(set([c[0].split('/')[0] for c in ckpt_vars]))
-    print("Loading {} variables ({} layers) from checkpoint {}.".format(len(ckpt_vars), len(ckpt_layers), ckpt))
+    if verbose:
+        print("Loading {} variables ({} layers) from checkpoint {}.".format(len(ckpt_vars), len(ckpt_layers), ckpt))
 
     if verbose:
         for name, tensor_shape in ckpt_vars:
